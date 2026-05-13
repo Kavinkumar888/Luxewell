@@ -1,117 +1,75 @@
-import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+// Navbar.jsx
+
+import { useState, useEffect } from 'react'
+import { Menu, X } from 'lucide-react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 
 const navLinks = [
-  { label: 'Home', scrollId: 'home', path: '/' },
-  { label: 'About', scrollId: 'about', path: '/' },
-  { label: 'Philosophy', scrollId: 'why-choose', path: '/' },
-  { label: 'Process', scrollId: 'process', path: '/' },
-  { label: 'Projects', scrollId: 'projects', path: '/' },
-  { label: 'Contact', scrollId: null, path: '/contact' },
-];
+  { label: 'Home', path: '/' },
+  { label: 'About', path: '/about' },
+  { label: 'Services', path: '/services' },
+  { label: 'Gallery', path: '/gallery' },
+  { label: 'Projects', path: '/projects' },
+  { label: 'Blog', path: '/blog' },
+  { label: 'Contact', path: '/contact' },
+]
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [active, setActive] = useState('home');
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [scrolled, setScrolled] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
 
-  // Change navbar style on scroll
+  const navigate = useNavigate()
+  const location = useLocation()
+
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    const onScroll = () => setScrolled(window.scrollY > 40)
 
-  // Smooth scroll to section
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+    window.addEventListener('scroll', onScroll)
 
-  // Handle click on nav items
-  const handleNavClick = (link) => {
-    if (link.path === '/contact') {
-      navigate('/contact');
-      setActive('contact');
-    } else {
-      // For home sections
-      if (location.pathname !== '/') {
-        // If not on home, navigate home first then scroll after render
-        navigate('/');
-        setTimeout(() => {
-          scrollToSection(link.scrollId);
-        }, 100);
-      } else {
-        scrollToSection(link.scrollId);
-      }
-      setActive(link.scrollId);
-    }
-    setMobileOpen(false);
-  };
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
-  // Update active state based on route or scroll position
-  useEffect(() => {
-    if (location.pathname === '/contact') {
-      setActive('contact');
-      return;
-    }
-
-    const handleScrollSpy = () => {
-      const sections = ['home', 'about', 'why-choose', 'process', 'projects'];
-      for (let section of sections) {
-        const el = document.getElementById(section);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 100 && rect.bottom >= 100) {
-            setActive(section);
-            break;
-          }
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScrollSpy);
-    handleScrollSpy(); // initial call
-    return () => window.removeEventListener('scroll', handleScrollSpy);
-  }, [location.pathname]);
+  const handleNav = (path) => {
+    navigate(path)
+    setMobileOpen(false)
+  }
 
   return (
     <header
-      className={`sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 transition-shadow duration-300 ${
+      className={`sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-300 ${
         scrolled ? 'shadow-md' : ''
       }`}
     >
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
-          {/* Logo - always goes home */}
+          {/* LOGO */}
           <Link
             to="/"
             className="flex flex-col leading-none"
-            onClick={() => setActive('home')}
           >
-            <span className="font-playfair text-xl font-bold text-dark tracking-wide">
-              KAYAL<span className="text-gold"> INTERIORS</span>
+            <span className="text-xl font-bold tracking-wide text-[#1C1A17]">
+              KAYAL
+              <span className="text-[#C9A96E]">
+                {' '}
+                INTERIORS
+              </span>
             </span>
-            <span className="text-[10px] font-medium tracking-[0.15em] text-gray-500 uppercase">
-              Premium Interior Design • Architecture
+
+            <span className="text-[10px] uppercase tracking-[0.15em] text-gray-500">
+              Premium Interior Design
             </span>
           </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-7">
+          {/* DESKTOP */}
+          <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <button
                 key={link.label}
-                onClick={() => handleNavClick(link)}
-                className={`nav-link ${
-                  active === (link.scrollId || link.label.toLowerCase())
-                    ? 'text-gold border-gold'
-                    : ''
+                onClick={() => handleNav(link.path)}
+                className={`text-sm font-medium transition ${
+                  location.pathname === link.path
+                    ? 'text-[#C9A96E]'
+                    : 'text-gray-700 hover:text-[#C9A96E]'
                 }`}
               >
                 {link.label}
@@ -119,31 +77,32 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Mobile hamburger */}
+          {/* MOBILE BUTTON */}
           <button
-            className="md:hidden text-dark p-1"
+            className="md:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
           >
-            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+            {mobileOpen ? <X /> : <Menu />}
           </button>
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* MOBILE MENU */}
       {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-4 shadow-lg">
-          {navLinks.map((link) => (
-            <button
-              key={link.label}
-              onClick={() => handleNavClick(link)}
-              className="text-sm font-medium text-gray-700 hover:text-gold transition-colors py-1 border-b border-gray-50 text-left"
-            >
-              {link.label}
-            </button>
-          ))}
+        <div className="md:hidden bg-white border-t">
+          <div className="flex flex-col px-6 py-4 gap-4">
+            {navLinks.map((link) => (
+              <button
+                key={link.label}
+                onClick={() => handleNav(link.path)}
+                className="text-left text-sm text-gray-700 hover:text-[#C9A96E]"
+              >
+                {link.label}
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </header>
-  );
+  )
 }

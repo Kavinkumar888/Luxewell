@@ -1,50 +1,94 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import TopBar from './components/TopBar';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import About from './components/About';
-import WhyUs from './components/WhyUs';
-import Services from './components/Services';
-import Process from './components/Process';
-import Projects from './components/Projects';
-import Testimonials from './components/Testimonials';
-import Blog from './components/Blog';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
-import WhatsAppFloat from './components/WhatsAppFloat';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+import TopBar from './components/TopBar'
+import Navbar from './components/Navbar'
+import Hero from './components/Hero'
+import WhyUs from './components/WhyUs'
+import Process from './components/Process'
+import Testimonials from './components/Testimonials'
+import Footer from './components/Footer'
+import WhatsAppFloat from './components/WhatsAppFloat'
+
+import About from './pages/About'
+import Services from './pages/Services'
+import Projects from './pages/Projects'
+import Blog from './pages/Blog'
+import GalleryPage from './pages/Gallery'
+import Contact from './pages/Contact'
 
 function HomePage() {
   return (
     <>
       <Hero />
-      <About />
       <WhyUs />
-      <Services />
       <Process />
-      <Projects />
       <Testimonials />
-      <Blog />
     </>
-  );
+  )
+}
+
+function AboutPage() {
+  return <About />
+}
+
+function ServicesPage() {
+  return <Services />
+}
+
+function Gallery() {
+  return <GalleryPage />
+}
+
+function ProjectsPage() {
+  return <Projects />
+}
+
+function BlogPage() {
+  return <Blog />
 }
 
 function ContactPage() {
-  return <Contact />;
+  return <Contact />
 }
 
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-[#FDF9F4]">
+        {/* HEADER */}
         <TopBar />
         <Navbar />
+
+        {/* ROUTES */}
         <Routes>
+          {/* HOME */}
           <Route path="/" element={<HomePage />} />
+
+          {/* ABOUT */}
+          <Route path="/about" element={<AboutPage />} />
+
+          {/* SERVICES */}
+          <Route path="/services" element={<ServicesPage />} />
+
+          {/* GALLERY */}
+          <Route path="/gallery" element={<Gallery />} />
+
+          {/* PROJECTS */}
+          <Route path="/projects" element={<ProjectsPage />} />
+
+          {/* BLOG */}
+          <Route path="/blog" element={<BlogPage />} />
+
+          {/* CONTACT */}
           <Route path="/contact" element={<ContactPage />} />
         </Routes>
+
+        {/* FOOTER */}
         <Footer />
+
+        {/* FLOAT BUTTON */}
         <WhatsAppFloat />
       </div>
     </BrowserRouter>
-  );
+  )
 }
